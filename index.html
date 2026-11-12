@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>교통대 자취방 지도</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;color:#17243a;background:#fff}button,input,textarea{font:inherit}button{cursor:pointer}header{height:65px;border-bottom:1px solid #e8ebf1;display:flex;justify-content:space-between;align-items:center;padding:0 22px;gap:12px}.logo{font-size:22px;font-weight:900;color:#537af6}.logo span{color:#182943}.top{display:flex;align-items:center;gap:10px}.muted{color:#7b879a;font-size:13px}.btn{border:1px solid #d7deea;border-radius:9px;background:white;padding:9px 13px;color:#24334d}.btn.primary{background:#4777f4;color:white;border-color:#4777f4}.btn.danger{color:#c93044}.btn:disabled{opacity:.5;cursor:wait}.intro{padding:22px 20px 18px}.intro h1{font-size:22px;margin:0 0 6px}.intro p{margin:0;color:#78849a;font-size:14px}.layout{display:grid;grid-template-columns:340px minmax(0,1fr);height:calc(100vh - 162px);min-height:480px}.sidebar{border-right:1px solid #e9edf4;overflow:auto;padding:15px 10px}.sidehead{font-weight:800;margin:0 0 4px}.count{font-size:13px;color:#8490a0;margin-bottom:15px}.room{border:1px solid #e4e8ef;border-radius:13px;padding:12px;display:flex;gap:12px;margin-bottom:12px;cursor:pointer;background:white}.room:hover{border-color:#7394fa}.thumb{width:92px;height:92px;flex-shrink:0;border-radius:10px;background:#e8edf5;object-fit:cover;display:grid;place-items:center;font-size:12px;color:#8290a7}.room h3{font-size:15px;margin:6px 0}.price{font-weight:900;color:#3265d7;font-size:17px}.sub{font-size:12px;color:#8190a3;margin-top:6px}.maparea{position:relative;min-width:0;background:#f2f4f8}#map{width:100%;height:100%}.hint{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 2px 14px #0002;z-index:5;font-size:13px;white-space:nowrap;pointer-events:none}.marker{background:white;border:2px solid #4777f4;border-radius:25px;padding:6px 10px;color:#315bd1;font-size:13px;font-weight:900;white-space:nowrap;box-shadow:0 2px 5px #0002}.overlay{position:fixed;inset:0;background:#14213c77;z-index:30;display:none;align-items:center;justify-content:center;padding:16px}.overlay.open{display:flex}.dialog{background:white;border-radius:16px;padding:22px;width:min(100%,480px);max-height:94vh;overflow:auto;box-shadow:0 20px 60px #0003}.dialog h2{font-size:20px;margin:0 0 15px}.field{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}.control{width:100%;border:1px solid #d5dce8;border-radius:8px;padding:10px;background:white}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}.msg{font-size:13px;color:#c13b4c;margin:10px 0;min-height:18px;white-space:pre-wrap}.detail-img{width:100%;max-height:260px;object-fit:cover;border-radius:10px;margin-bottom:10px}.empty{color:#8490a0;font-size:14px;padding:20px 8px}.footer{font-size:12px;color:#8692a4;padding:12px 20px;border-top:1px solid #e8ebf1}@media(max-width:700px){header{padding:0 12px}.logo{font-size:18px}.intro{padding:15px}.intro h1{font-size:19px}.layout{display:flex;flex-direction:column-reverse;height:auto}.maparea{height:55vh;min-height:350px}.sidebar{max-height:none}.hint{white-space:normal;width:max-content;max-width:90%;text-align:center}}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;color:#17243a;background:#fff}button,input,textarea{font:inherit}button{cursor:pointer}header{height:65px;border-bottom:1px solid #e8ebf1;display:flex;justify-content:space-between;align-items:center;padding:0 22px;gap:12px}.logo{font-size:22px;font-weight:900;color:#537af6}.logo span{color:#182943}.top{display:flex;align-items:center;gap:10px}.muted{color:#7b879a;font-size:13px}.btn{border:1px solid #d7deea;border-radius:9px;background:white;padding:9px 13px;color:#24334d}.btn.primary{background:#4777f4;color:white;border-color:#4777f4}.btn.danger{color:#c93044}.btn:disabled{opacity:.5;cursor:wait}.intro{padding:22px 20px 18px}.intro h1{font-size:22px;margin:0 0 6px}.intro p{margin:0;color:#78849a;font-size:14px}.layout{display:grid;grid-template-columns:340px minmax(0,1fr);height:calc(100vh - 162px);min-height:480px}.sidebar{border-right:1px solid #e9edf4;overflow:auto;padding:15px 10px}.sidehead{font-weight:800;margin:0 0 4px}.count{font-size:13px;color:#8490a0;margin-bottom:15px}.room{border:1px solid #e4e8ef;border-radius:13px;padding:12px;display:flex;gap:12px;margin-bottom:12px;cursor:pointer;background:white}.room:hover{border-color:#7394fa}.thumb{width:92px;height:92px;flex-shrink:0;border-radius:10px;background:#e8edf5;object-fit:cover;display:grid;place-items:center;font-size:12px;color:#8290a7}.room h3{font-size:15px;margin:6px 0}.price{font-weight:900;color:#3265d7;font-size:17px}.sub{font-size:12px;color:#8190a3;margin-top:6px}.maparea{position:relative;min-width:0;background:#f2f4f8}#map{width:100%;height:100%}.hint{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 2px 14px #0002;z-index:5;font-size:13px;white-space:nowrap;pointer-events:none}.marker{background:white;border:2px solid #4777f4;border-radius:25px;padding:6px 10px;color:#315bd1;font-size:13px;font-weight:900;white-space:nowrap;box-shadow:0 2px 5px #0002}.overlay{position:fixed;inset:0;background:#14213c77;z-index:30;display:none;align-items:center;justify-content:center;padding:16px}.overlay.open{display:flex}.dialog{background:white;border-radius:16px;padding:22px;width:min(100%,480px);max-height:94vh;overflow:auto;box-shadow:0 20px 60px #0003}.dialog h2{font-size:20px;margin:0 0 15px}.field{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}.control{width:100%;border:1px solid #d5dce8;border-radius:8px;padding:10px;background:white}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}.msg{font-size:13px;color:#c13b4c;margin:10px 0;min-height:18px;white-space:pre-wrap}.gallery-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0 12px}.gallery-nav button{border:1px solid #d7deea;background:#fff;border-radius:8px;padding:7px 12px}.gallery-nav button:disabled{opacity:.35}.gallery-count{font-size:13px;color:#66758b}.photo-note{font-size:12px;color:#7b879a;margin-top:5px}.detail-img{width:100%;max-height:260px;object-fit:cover;border-radius:10px;margin-bottom:10px}.empty{color:#8490a0;font-size:14px;padding:20px 8px}.footer{font-size:12px;color:#8692a4;padding:12px 20px;border-top:1px solid #e8ebf1}@media(max-width:700px){header{padding:0 12px}.logo{font-size:18px}.intro{padding:15px}.intro h1{font-size:19px}.layout{display:flex;flex-direction:column-reverse;height:auto}.maparea{height:55vh;min-height:350px}.sidebar{max-height:none}.hint{white-space:normal;width:max-content;max-width:90%;text-align:center}}
 </style>
 </head>
 <body>
@@ -13,7 +13,7 @@
 <div class="layout"><aside class="sidebar"><div class="sidehead">등록된 원룸</div><div id="count" class="count">불러오는 중...</div><div id="room-list"></div></aside><main class="maparea"><div id="map"></div><div id="hint" class="hint" hidden>지도를 클릭하면 새 매물을 등록할 수 있어요.</div></main></div>
 <footer class="footer">교통대 자취방 지도 · 매물 정보는 실제 계약 전 반드시 확인하세요.</footer>
 <div class="overlay" id="login-modal"><div class="dialog"><h2>관리자 로그인</h2><label class="field">이메일</label><input class="control" id="login-email" type="email" autocomplete="username"><label class="field">비밀번호</label><input class="control" id="login-password" type="password" autocomplete="current-password"><div class="msg" id="login-msg"></div><div class="actions"><button class="btn" data-close="login-modal">취소</button><button class="btn primary" id="login-submit">로그인</button></div></div></div>
-<div class="overlay" id="edit-modal"><div class="dialog"><h2 id="edit-title">매물 등록</h2><form id="room-form"><label class="field">원룸 이름 *</label><input class="control" name="name" required maxlength="100"><div class="grid2"><div><label class="field">보증금 (만원) *</label><input class="control" name="deposit" type="number" min="0" required></div><div><label class="field">월세 (만원) *</label><input class="control" name="rent" type="number" min="0" required></div></div><label class="field">관리비 (만원)</label><input class="control" name="fee" type="number" min="0" value="0"><div class="grid2"><div><label class="field">위도 *</label><input class="control" name="lat" type="number" step="any" required></div><div><label class="field">경도 *</label><input class="control" name="lng" type="number" step="any" required></div></div><label class="field">방 사진 (선택, 5MB 이하)</label><input class="control" id="photo-file" type="file" accept="image/jpeg,image/png,image/webp"><label class="field">원본 매물 링크 (선택)</label><input class="control" name="listing_url" type="url" placeholder="https://..."><label class="field">상세 설명</label><textarea class="control" name="description" rows="3"></textarea><div class="msg" id="edit-msg"></div><div class="actions"><button class="btn" type="button" data-close="edit-modal">취소</button><button class="btn primary" id="save-btn" type="submit">저장</button></div></form></div></div>
+<div class="overlay" id="edit-modal"><div class="dialog"><h2 id="edit-title">매물 등록</h2><form id="room-form"><label class="field">원룸 이름 *</label><input class="control" name="name" required maxlength="100"><div class="grid2"><div><label class="field">보증금 (만원) *</label><input class="control" name="deposit" type="number" min="0" required></div><div><label class="field">월세 (만원) *</label><input class="control" name="rent" type="number" min="0" required></div></div><label class="field">관리비 (만원)</label><input class="control" name="fee" type="number" min="0" value="0"><div class="grid2"><div><label class="field">위도 *</label><input class="control" name="lat" type="number" step="any" required></div><div><label class="field">경도 *</label><input class="control" name="lng" type="number" step="any" required></div></div><label class="field">방 사진 (최대 10장, 장당 5MB 이하)</label><input class="control" id="photo-file" type="file" accept="image/jpeg,image/png,image/webp" multiple><div class="photo-note" id="photo-note">여러 장을 한 번에 선택할 수 있어요. 첫 사진이 대표 사진입니다.</div><div id="existing-photos"></div><label class="field">원본 매물 링크 (선택)</label><input class="control" name="listing_url" type="url" placeholder="https://..."><label class="field">상세 설명</label><textarea class="control" name="description" rows="3"></textarea><div class="msg" id="edit-msg"></div><div class="actions"><button class="btn" type="button" data-close="edit-modal">취소</button><button class="btn primary" id="save-btn" type="submit">저장</button></div></form></div></div>
 <div class="overlay" id="detail-modal"><div class="dialog"><h2 id="detail-name"></h2><div id="detail-content"></div><div class="actions" id="detail-actions"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
@@ -33,7 +33,21 @@ function money(n){return Number(n||0).toLocaleString('ko-KR')}
 function cleanNode(el){el.replaceChildren()}
 function textEl(tag,txt,cls){const e=document.createElement(tag);e.textContent=txt;if(cls)e.className=cls;return e}
 function price(room){return money(room.deposit)+' / '+money(room.rent)}
-function photoUrl(room){return room.photo_url && safeUrl(room.photo_url)}
+function photoUrls(room){
+ const photos=Array.isArray(room.photo_urls)?room.photo_urls.filter(u=>safeUrl(u)):[];
+ if(photos.length)return photos;
+ return room.photo_url&&safeUrl(room.photo_url)?[room.photo_url]:[];
+}
+function photoUrl(room){return photoUrls(room)[0]||null}
+function renderExistingPhotos(room){
+ const box=$('existing-photos');cleanNode(box);
+ const photos=room?photoUrls(room):[];
+ if(!photos.length)return;
+ box.append(textEl('p',`기존 사진 ${photos.length}장 · 새 사진을 선택하면 뒤에 추가됩니다.`,'photo-note'));
+ const remove=textEl('button','기존 사진 모두 지우기','btn danger');remove.type='button';
+ remove.onclick=()=>{if(confirm('이 매물의 기존 사진을 모두 목록에서 제거할까요?')){box.dataset.clear='yes';cleanNode(box);box.append(textEl('p','저장하면 기존 사진이 목록에서 제거됩니다.','photo-note'))}};
+ box.append(remove);
+}
 function render(){
  $('count').textContent=`총 ${rooms.length}개 매물`;
  const list=$('room-list');cleanNode(list);
@@ -81,7 +95,7 @@ function openEditor(room=null,lat=null,lng=null){
  for(const key of ['name','deposit','rent','fee','lat','lng','listing_url','description']){
   f.elements[key].value=room?(room[key]??''):(key==='lat'?lat:key==='lng'?lng:key==='fee'?0:'');
  }
- setMessage('edit-msg','');show('edit-modal');
+ $('existing-photos').dataset.clear='no';renderExistingPhotos(room);setMessage('edit-msg','');show('edit-modal');
 }
 $('room-form').onsubmit=async e=>{
  e.preventDefault();if(!admin)return;
@@ -92,17 +106,25 @@ $('room-form').onsubmit=async e=>{
   if(!payload.name||!Number.isFinite(payload.lat)||!Number.isFinite(payload.lng)||Math.abs(payload.lat)>90||Math.abs(payload.lng)>180)throw Error('이름 또는 좌표를 확인해 주세요.');
   if([payload.deposit,payload.rent,payload.fee].some(v=>!Number.isFinite(v)||v<0))throw Error('금액을 확인해 주세요.');
   if(payload.listing_url&&!safeUrl(payload.listing_url))throw Error('링크는 https:// 또는 http://로 시작해야 합니다.');
-  const old=rooms.find(r=>r.id===editingId);if(old?.photo_url)payload.photo_url=old.photo_url;
-  const file=$('photo-file').files[0];
-  if(file){
+  const old=rooms.find(r=>r.id===editingId);
+  const existing=$('existing-photos').dataset.clear==='yes'?[]:(old?photoUrls(old):[]);
+  const files=Array.from($('photo-file').files);
+  if(existing.length+files.length>10)throw Error('사진은 기존 사진 포함 최대 10장까지 등록할 수 있어요.');
+  for(const file of files){
    if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('JPG, PNG, WEBP 사진만 올릴 수 있어요.');
-   if(file.size>5*1024*1024)throw Error('사진은 5MB 이하로 선택해 주세요.');
+   if(file.size>5*1024*1024)throw Error('사진은 장당 5MB 이하로 선택해 주세요.');
+  }
+  const photos=[...existing];
+  for(let i=0;i<files.length;i++){
+   const file=files[i];setMessage('edit-msg',`사진 업로드 중... (${i+1}/${files.length})`);
    const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
    const filename=`${crypto.randomUUID()}.${ext}`;
    const {error:uploadError}=await db.storage.from('room-photos').upload(filename,file,{contentType:file.type,upsert:false});
    if(uploadError)throw uploadError;
-   payload.photo_url=db.storage.from('room-photos').getPublicUrl(filename).data.publicUrl;
+   photos.push(db.storage.from('room-photos').getPublicUrl(filename).data.publicUrl);
   }
+  payload.photo_urls=photos;
+  payload.photo_url=photos[0]||null;
   const query=editingId?db.from('rooms').update(payload).eq('id',editingId):db.from('rooms').insert(payload);
   const {error}=await query;if(error)throw error;
   hide('edit-modal');hide('detail-modal');await loadRooms();
@@ -112,7 +134,16 @@ $('room-form').onsubmit=async e=>{
 function openDetail(room){
  selected=room;$('detail-name').textContent=room.name;
  const content=$('detail-content');cleanNode(content);
- const photo=photoUrl(room);if(photo){const img=document.createElement('img');img.src=photo;img.alt='원룸 사진';img.className='detail-img';content.append(img)}
+ const photos=photoUrls(room);
+ if(photos.length){
+  let index=0;const img=document.createElement('img');img.alt='원룸 사진';img.className='detail-img';content.append(img);
+  if(photos.length>1){
+   const nav=document.createElement('div');nav.className='gallery-nav';
+   const prev=textEl('button','← 이전','btn');const count=textEl('span','','gallery-count');const next=textEl('button','다음 →','btn');
+   const draw=()=>{img.src=photos[index];count.textContent=`${index+1} / ${photos.length}`;prev.disabled=index===0;next.disabled=index===photos.length-1};
+   prev.onclick=()=>{index--;draw()};next.onclick=()=>{index++;draw()};nav.append(prev,count,next);content.append(nav);draw();
+  }else{img.src=photos[0]}
+ }
  content.append(textEl('p',`보증금 ${money(room.deposit)}만원 / 월세 ${money(room.rent)}만원`),textEl('p',`관리비 ${money(room.fee)}만원`));
  if(room.description)content.append(textEl('p',room.description));
  const actions=$('detail-actions');cleanNode(actions);
