@@ -23,16 +23,18 @@
 .search-results{padding:0 10px 10px}.search-item{width:100%;text-align:left;background:#fff;border:1px solid #e1e7f1;border-radius:10px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .search-item:hover{border-color:#7196f8;background:#f8faff}.search-item small{display:block;color:#77869a;margin-top:4px}.search-tag{font-size:11px;background:#e9f0ff;color:#345dc2;border-radius:7px;padding:4px 6px;white-space:nowrap}.search-tag.place{background:#f0f2f5;color:#526174}.search-section{font-weight:800;font-size:13px;margin:12px 2px 8px}.search-empty{color:#77869a;font-size:13px;padding:10px 3px}.search-action{border:1px solid #6c8cf2;background:#f0f5ff;color:#315dd2;border-radius:8px;padding:7px 9px;white-space:nowrap}
 @media(max-width:700px){.searchbar{padding:10px 12px}.searchbar input{max-width:none}}
+.type-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.type-tab{border:1px solid #d7deea;background:#fff;border-radius:9px;padding:9px 12px}.type-tab.active{background:#e9f0ff;border-color:#4777f4;color:#2858ca;font-weight:800}.type-note{font-size:12px;color:#697a91}.type-form{border:1px solid #dfe5ef;border-radius:12px;padding:12px;margin-top:12px}.type-card{border:1px solid #e0e6f0;border-radius:10px;padding:10px;margin:8px 0}.type-card .actions{margin-top:8px}.type-gallery{margin-top:10px}.dialog.wide{width:min(100%,580px)}
 </style>
 </head>
 <body>
 <header><div class="logo"><span>KNUT</span> ROOM MAP</div><div class="top"><span id="user-label" class="muted">한국교통대학교 충주캠퍼스</span><button class="btn" id="auth-btn">관리자 로그인</button></div></header>
 <div class="intro"><h1>교통대 주변 자취방 찾기 🏠</h1><p>지도에서 원룸을 선택하고 가격과 정보를 확인해 보세요.</p></div>
-<form id="search-form" class="searchbar" autocomplete="off"><input id="search-input" aria-label="원룸 이름 또는 주소 검색" placeholder="원룸 이름 또는 주소 검색 (예: 교통대빌)"><button class="btn primary" type="submit">🔍 검색</button><button class="btn" id="search-clear" type="button">초기화</button><span class="search-status" id="search-status">등록된 매물 + 카카오 장소 검색</span></form>
+<form id="search-form" class="searchbar" autocomplete="off"><input id="search-input" aria-label="원룸 이름 또는 주소 검색" placeholder="원룸 이름 또는 주소 검색 (예: 메이저빌)"><button class="btn primary" type="submit">🔍 검색</button><button class="btn" id="search-clear" type="button">초기화</button><span class="search-status" id="search-status">등록된 매물 + 카카오 장소 검색</span></form>
 <div class="layout"><aside class="sidebar"><div class="sidehead">등록된 원룸</div><div id="count" class="count">불러오는 중...</div><div id="search-results" class="search-results" hidden></div><div id="room-list"></div></aside><main class="maparea"><div id="map"></div><div id="hint" class="hint" hidden>지도를 클릭하면 새 매물을 등록할 수 있어요.</div></main></div>
 <footer class="footer">교통대 자취방 지도 · 매물 정보는 실제 계약 전 반드시 확인하세요.</footer>
 <div class="overlay" id="login-modal"><div class="dialog"><h2>관리자 로그인</h2><label class="field">이메일</label><input class="control" id="login-email" type="email" autocomplete="username"><label class="field">비밀번호</label><input class="control" id="login-password" type="password" autocomplete="current-password"><div class="msg" id="login-msg"></div><div class="actions"><button class="btn" data-close="login-modal">취소</button><button class="btn primary" id="login-submit">로그인</button></div></div></div>
-<div class="overlay" id="edit-modal"><div class="dialog"><h2 id="edit-title">매물 등록</h2><form id="room-form"><label class="field">원룸 이름 *</label><input class="control" name="name" required maxlength="100"><div class="grid2"><div><label class="field">보증금 (만원) *</label><input class="control" name="deposit" type="number" min="0" required></div><div><label class="field">월세 (만원) *</label><input class="control" name="rent" type="number" min="0" required></div></div><label class="field">관리비 (만원)</label><input class="control" name="fee" type="number" min="0" value="0"><div class="grid2"><div><label class="field">위도 *</label><input class="control" name="lat" type="number" step="any" required></div><div><label class="field">경도 *</label><input class="control" name="lng" type="number" step="any" required></div></div><label class="field">방 사진 (최대 10장, 장당 5MB 이하)</label><input class="control" id="photo-file" type="file" accept="image/jpeg,image/png,image/webp" multiple><div class="photo-note" id="photo-note">여러 장을 한 번에 선택할 수 있어요. 첫 사진이 대표 사진입니다.</div><div id="existing-photos"></div><label class="field">원본 매물 링크 (선택)</label><input class="control" name="listing_url" type="url" placeholder="https://..."><label class="field">상세 설명</label><textarea class="control" name="description" rows="3"></textarea><div class="msg" id="edit-msg"></div><div class="actions"><button class="btn" type="button" data-close="edit-modal">취소</button><button class="btn primary" id="save-btn" type="submit">저장</button></div></form></div></div>
+<div class="overlay" id="edit-modal"><div class="dialog"><h2 id="edit-title">매물 등록</h2><form id="room-form"><label class="field">원룸 이름 *</label><input class="control" name="name" required maxlength="100"><div class="grid2"><div><label class="field">보증금 (만원) *</label><input class="control" name="deposit" type="number" min="0" required></div><div><label class="field">월세 (만원) *</label><input class="control" name="rent" type="number" min="0" required></div></div><label class="field">관리비 (만원)</label><input class="control" name="fee" type="number" min="0" value="0"><div class="grid2"><div><label class="field">위도 *</label><input class="control" name="lat" type="number" step="any" required></div><div><label class="field">경도 *</label><input class="control" name="lng" type="number" step="any" required></div></div><p class="type-note">건물 기본 정보입니다. 여러 방 타입의 가격·사진은 건물 저장 후 상세 화면의 ‘+ 방 타입 추가’에서 등록하세요.</p><label class="field">기본 사진 (최대 10장, 장당 5MB 이하)</label><input class="control" id="photo-file" type="file" accept="image/jpeg,image/png,image/webp" multiple><div class="photo-note" id="photo-note">여러 장을 한 번에 선택할 수 있어요. 첫 사진이 대표 사진입니다.</div><div id="existing-photos"></div><label class="field">원본 매물 링크 (선택)</label><input class="control" name="listing_url" type="url" placeholder="https://..."><label class="field">상세 설명</label><textarea class="control" name="description" rows="3"></textarea><div class="msg" id="edit-msg"></div><div class="actions"><button class="btn" type="button" data-close="edit-modal">취소</button><button class="btn primary" id="save-btn" type="submit">저장</button></div></form></div></div>
+<div class="overlay" id="type-modal"><div class="dialog wide"><h2 id="type-title">방 타입 추가</h2><form id="type-form"><label class="field">타입 이름 *</label><input class="control" name="type_name" placeholder="예: A타입 / 복층형" required maxlength="80"><div class="grid2"><div><label class="field">보증금 (만원)</label><input class="control" name="deposit" type="number" min="0" required></div><div><label class="field">월세 (만원)</label><input class="control" name="rent" type="number" min="0" required></div></div><label class="field">관리비 (만원)</label><input class="control" name="fee" type="number" min="0" value="0"><label class="field">이 타입의 사진 (최대 10장)</label><input class="control" id="type-photo-file" type="file" accept="image/jpeg,image/png,image/webp" multiple><div id="type-existing-photos" class="photo-note"></div><label class="field">타입 설명</label><textarea class="control" name="description" rows="3"></textarea><div class="msg" id="type-msg"></div><div class="actions"><button type="button" class="btn" data-close="type-modal">취소</button><button type="submit" class="btn primary" id="type-save">타입 저장</button></div></form></div></div>
 <div class="overlay" id="detail-modal"><div class="dialog"><h2 id="detail-name"></h2><div id="detail-content"></div><div class="actions" id="detail-actions"></div></div></div>
 <div id="photo-lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="사진 원본 보기">
 <button id="lightbox-close" class="lightbox-close" type="button" aria-label="닫기">×</button>
@@ -50,7 +52,7 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Q8b--CI0F6t37kFmU_44mg_-1Pe1wQX
 
 const $=id=>document.getElementById(id);
 const configured = !KAKAO_KEY.startsWith('여기에_') && !SUPABASE_URL.includes('여기에_') && !SUPABASE_PUBLISHABLE_KEY.startsWith('여기에_');
-let db=null,map=null,rooms=[],overlays=[],admin=false,selected=null,editingId=null,placesService=null,searchPin=null,searchSeq=0;
+let db=null,map=null,rooms=[],roomTypes=[],overlays=[],admin=false,selected=null,editingId=null,placesService=null,searchPin=null,searchSeq=0,editingTypeId=null,typeRoomId=null;
 function show(id){$(id).classList.add('open')}function hide(id){$(id).classList.remove('open')}
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>hide(b.dataset.close));
 function setMessage(id,msg){$(id).textContent=msg||''}
@@ -58,7 +60,10 @@ function safeUrl(url){try{let u=new URL(url);return ['http:','https:'].includes(
 function money(n){return Number(n||0).toLocaleString('ko-KR')}
 function cleanNode(el){el.replaceChildren()}
 function textEl(tag,txt,cls){const e=document.createElement(tag);e.textContent=txt;if(cls)e.className=cls;return e}
-function price(room){return money(room.deposit)+' / '+money(room.rent)}
+function typesFor(room){return roomTypes.filter(t=>t.room_id===room.id)}
+function lowestRent(room){const ts=typesFor(room);return ts.length?Math.min(...ts.map(t=>Number(t.rent))):Number(room.rent)}
+function price(room){const ts=typesFor(room);return ts.length?`${money(lowestRent(room))}만원부터 · ${ts.length}개 타입`:money(room.deposit)+' / '+money(room.rent)}
+function representativePhoto(room){return photoUrl(typesFor(room)[0]||room)||photoUrl(room)}
 function photoUrls(room){
  const photos=Array.isArray(room.photo_urls)?room.photo_urls.filter(u=>safeUrl(u)):[];
  if(photos.length)return photos;
@@ -80,15 +85,15 @@ function render(){
  if(!rooms.length)list.append(textEl('p','아직 등록된 매물이 없어요.','empty'));
  rooms.forEach(room=>{
   const card=document.createElement('div');card.className='room';card.onclick=()=>openDetail(room);
-  const photo=photoUrl(room);let thumb;
+  const photo=representativePhoto(room);let thumb;
   if(photo){thumb=document.createElement('img');thumb.src=photo;thumb.alt='매물 사진';thumb.className='thumb'}else{thumb=textEl('div','사진 준비 중','thumb')}
-  const info=document.createElement('div');info.append(textEl('h3',room.name),textEl('div',price(room),'price'),textEl('div',`보증금 / 월세 · 관리비 ${money(room.fee)}만원`,'sub'));
+  const info=document.createElement('div');info.append(textEl('h3',room.name),textEl('div',price(room),'price'),textEl('div',typesFor(room).length?'타입별 보증금·월세·사진 확인':`보증금 / 월세 · 관리비 ${money(room.fee)}만원`,'sub'));
   card.append(thumb,info);list.append(card);
  });
  overlays.forEach(o=>o.setMap(null));overlays=[];
  if(!map||!window.kakao)return;
  rooms.forEach(room=>{
-  const el=textEl('div',`${money(room.rent)}만원`,'marker');el.onclick=()=>openDetail(room);
+  const el=textEl('div',`${money(lowestRent(room))}만원`,'marker');el.onclick=()=>openDetail(room);
   const overlay=new kakao.maps.CustomOverlay({position:new kakao.maps.LatLng(room.lat,room.lng),content:el,yAnchor:1.3});overlay.setMap(map);overlays.push(overlay);
  });
 }
@@ -105,7 +110,7 @@ function renderSearchResults(query,matched,places,notice=''){
  const panel=$('search-results');panel.hidden=false;panel.replaceChildren();
  searchSection(panel,`검색 결과 · 등록된 매물 ${matched.length}개`);
  if(!matched.length)panel.append(textEl('div','일치하는 등록 매물이 없어요.','search-empty'));
- matched.forEach(room=>panel.append(resultItem(room.name,`보증금 ${money(room.deposit)} / 월세 ${money(room.rent)}만원`,'등록된 매물',()=>{moveMap(room.lat,room.lng);openDetail(room)})));
+ matched.forEach(room=>panel.append(resultItem(room.name,typesFor(room).length?`${typesFor(room).length}개 타입 · 월세 ${money(lowestRent(room))}만원부터`:`보증금 ${money(room.deposit)} / 월세 ${money(room.rent)}만원`,'등록된 매물',()=>{moveMap(room.lat,room.lng);openDetail(room)})));
  searchSection(panel,`카카오 장소 검색 · ${places.length}개`);
  if(notice)panel.append(textEl('div',notice,'search-empty'));
  if(!places.length&&!notice)panel.append(textEl('div','일치하는 카카오 장소가 없어요. 등록되지 않은 원룸은 검색되지 않을 수도 있어요.','search-empty'));
@@ -132,7 +137,7 @@ function searchPlaces(query){return new Promise(resolve=>{
 $('search-form').onsubmit=async e=>{
  e.preventDefault();const query=$('search-input').value.trim();if(!query){$('search-input').focus();return}
  const seq=++searchSeq;$('search-status').textContent='검색 중...';
- const key=searchText(query);const matched=rooms.filter(r=>searchText(r.name).includes(key)||searchText(r.description).includes(key));
+ const key=searchText(query);const matched=rooms.filter(r=>searchText(r.name).includes(key)||searchText(r.description).includes(key)||typesFor(r).some(t=>searchText(t.type_name).includes(key)||searchText(t.description).includes(key)));
  const result=await searchPlaces(query);if(seq!==searchSeq)return;
  renderSearchResults(query,matched,result.items,result.notice);
 };
@@ -140,7 +145,10 @@ $('search-clear').onclick=()=>{searchSeq++;$('search-input').value='';$('search-
 async function loadRooms(){
  const {data,error}=await db.from('rooms').select('*').order('created_at',{ascending:false});
  if(error){$('count').textContent='매물 로딩 실패';console.error(error);return}
- rooms=data||[];render();if(!$('search-results').hidden&&$('search-input').value.trim())$('search-form').requestSubmit();
+ rooms=data||[];
+ const typeResult=await db.from('room_types').select('*').order('created_at',{ascending:true});
+ if(typeResult.error){console.error('방 타입 로딩 오류:',typeResult.error);$('count').textContent='방 타입 로딩 오류 · Console 확인';return}
+ roomTypes=typeResult.data||[];render();if(!$('search-results').hidden&&$('search-input').value.trim())$('search-form').requestSubmit();
 }
 async function updateAuth(){
  const {data:{user}}=await db.auth.getUser();admin=false;
@@ -223,25 +231,68 @@ document.addEventListener('keydown',e=>{
  if(e.key==='ArrowLeft'&&lightboxIndex>0){lightboxIndex--;updateLightbox()}
  if(e.key==='ArrowRight'&&lightboxIndex<lightboxPhotos.length-1){lightboxIndex++;updateLightbox()}
 });
+function renderGallery(content,photos){
+ if(!photos.length){content.append(textEl('p','등록된 사진이 없어요.','type-note'));return}
+ let index=0;const img=document.createElement('img');img.alt='원룸 사진';img.className='detail-img';img.title='클릭하면 원본 사진 보기';img.onclick=()=>openLightbox(photos,index);content.append(img);
+ if(photos.length>1){const nav=document.createElement('div');nav.className='gallery-nav';const prev=textEl('button','← 이전','btn');const count=textEl('span','','gallery-count');const next=textEl('button','다음 →','btn');
+ const draw=()=>{img.src=photos[index];count.textContent=`${index+1} / ${photos.length}`;prev.disabled=index===0;next.disabled=index===photos.length-1};prev.onclick=()=>{index--;draw()};next.onclick=()=>{index++;draw()};nav.append(prev,count,next);content.append(nav);draw()}else img.src=photos[0];
+}
+function openTypeEditor(room,type=null){
+ if(!admin)return;typeRoomId=room.id;editingTypeId=type?type.id:null;
+ $('type-title').textContent=type?`${room.name} · 방 타입 수정`:`${room.name} · 새 방 타입`;
+ const f=$('type-form');f.reset();for(const key of ['type_name','deposit','rent','fee','description'])f.elements[key].value=type?(type[key]??''):(key==='fee'?0:'');
+ const box=$('type-existing-photos');box.replaceChildren();box.dataset.clear='no';
+ const photos=type?photoUrls(type):[];
+ if(photos.length){box.append(textEl('span',`기존 사진 ${photos.length}장 · 새 사진은 뒤에 추가돼요. `));const btn=textEl('button','기존 사진 모두 제거','btn danger');btn.type='button';btn.onclick=()=>{if(confirm('이 타입의 기존 사진을 목록에서 제거할까요?')){box.dataset.clear='yes';box.textContent='저장하면 기존 사진 목록이 제거됩니다.'}};box.append(btn)}
+ setMessage('type-msg','');hide('detail-modal');show('type-modal');
+}
+$('type-form').onsubmit=async e=>{
+ e.preventDefault();if(!admin)return;const f=e.currentTarget,b=$('type-save');b.disabled=true;setMessage('type-msg','저장 중...');
+ try{
+  const get=k=>f.elements[k].value.trim();const payload={room_id:typeRoomId,type_name:get('type_name'),deposit:Number(get('deposit')),rent:Number(get('rent')),fee:Number(get('fee')||0),description:get('description')||null};
+  if(!payload.type_name||[payload.deposit,payload.rent,payload.fee].some(n=>!Number.isFinite(n)||n<0))throw Error('타입 이름과 금액을 확인해 주세요.');
+  const old=roomTypes.find(t=>t.id===editingTypeId);
+  const existing=$('type-existing-photos').dataset.clear==='yes'?[]:(old?photoUrls(old):[]);
+  const files=Array.from($('type-photo-file').files);if(existing.length+files.length>10)throw Error('타입당 사진은 최대 10장이에요.');
+  const photos=[...existing];for(let i=0;i<files.length;i++){
+   const file=files[i];if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('JPG, PNG, WEBP 파일만 가능해요.');if(file.size>5*1024*1024)throw Error('사진 한 장은 5MB 이하로 올려 주세요.');
+   setMessage('type-msg',`사진 업로드 중... ${i+1}/${files.length}`);
+   const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';const filename=`types/${crypto.randomUUID()}.${ext}`;
+   const {error}=await db.storage.from('room-photos').upload(filename,file,{contentType:file.type,upsert:false});if(error)throw error;
+   photos.push(db.storage.from('room-photos').getPublicUrl(filename).data.publicUrl);
+  }
+  payload.photo_urls=photos;
+  const q=editingTypeId?db.from('room_types').update(payload).eq('id',editingTypeId):db.from('room_types').insert(payload);
+  const {error}=await q;if(error)throw error;
+  hide('type-modal');await loadRooms();const room=rooms.find(r=>r.id===typeRoomId);if(room)openDetail(room);
+ }catch(err){setMessage('type-msg',err.message||String(err))}finally{b.disabled=false}
+};
 function openDetail(room){
  selected=room;$('detail-name').textContent=room.name;
  const content=$('detail-content');cleanNode(content);
- const photos=photoUrls(room);
- if(photos.length){
-  let index=0;const img=document.createElement('img');img.alt='원룸 사진';img.className='detail-img';img.title='클릭하면 사진 전체 보기';img.onclick=()=>openLightbox(photos,index);content.append(img);
-  if(photos.length>1){
-   const nav=document.createElement('div');nav.className='gallery-nav';
-   const prev=textEl('button','← 이전','btn');const count=textEl('span','','gallery-count');const next=textEl('button','다음 →','btn');
-   const draw=()=>{img.src=photos[index];count.textContent=`${index+1} / ${photos.length}`;prev.disabled=index===0;next.disabled=index===photos.length-1};
-   prev.onclick=()=>{index--;draw()};next.onclick=()=>{index++;draw()};nav.append(prev,count,next);content.append(nav);draw();
-  }else{img.src=photos[0]}
+ const types=typesFor(room);
+ if(types.length){
+  const tabs=document.createElement('div');tabs.className='type-tabs';const pane=document.createElement('div');
+  content.append(textEl('p',`이 건물은 ${types.length}개 방 타입이 등록되어 있어요. 타입을 눌러 가격과 사진을 확인하세요.`,'type-note'),tabs,pane);
+  function choose(type){
+   tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.id===String(type.id)));
+   pane.replaceChildren();pane.append(textEl('h3',type.type_name),textEl('p',`보증금 ${money(type.deposit)}만원 / 월세 ${money(type.rent)}만원 · 관리비 ${money(type.fee)}만원`));
+   renderGallery(pane,photoUrls(type));if(type.description)pane.append(textEl('p',type.description));
+   if(admin){const a=document.createElement('div');a.className='actions';const edit=textEl('button','이 타입 수정','btn');edit.onclick=()=>openTypeEditor(room,type);
+    const del=textEl('button','이 타입 삭제','btn danger');del.onclick=async()=>{if(!confirm(`${type.type_name} 타입을 삭제할까요?`))return;del.disabled=true;const {error}=await db.from('room_types').delete().eq('id',type.id);if(error){alert(error.message);del.disabled=false;return}hide('detail-modal');await loadRooms();openDetail(rooms.find(r=>r.id===room.id))};a.append(edit,del);pane.append(a)}
+  }
+  types.forEach(type=>{const b=textEl('button',type.type_name,'type-tab');b.type='button';b.dataset.id=String(type.id);b.onclick=()=>choose(type);tabs.append(b)});choose(types[0]);
+ }else{
+  content.append(textEl('p','기본 매물 정보 (아직 별도 방 타입 없음)','type-note'));
+  renderGallery(content,photoUrls(room));
+  content.append(textEl('p',`보증금 ${money(room.deposit)}만원 / 월세 ${money(room.rent)}만원`),textEl('p',`관리비 ${money(room.fee)}만원`));
+  if(room.description)content.append(textEl('p',room.description));
  }
- content.append(textEl('p',`보증금 ${money(room.deposit)}만원 / 월세 ${money(room.rent)}만원`),textEl('p',`관리비 ${money(room.fee)}만원`));
- if(room.description)content.append(textEl('p',room.description));
  const actions=$('detail-actions');cleanNode(actions);
  const link=safeUrl(room.listing_url);if(link){const a=document.createElement('a');a.href=link;a.target='_blank';a.rel='noopener noreferrer';a.className='btn';a.textContent='원본 매물 보기';actions.append(a)}
  if(admin){
-  const edit=textEl('button','수정','btn');edit.onclick=()=>{hide('detail-modal');openEditor(room)};actions.append(edit);
+  const addType=textEl('button','+ 방 타입 추가','btn primary');addType.onclick=()=>openTypeEditor(room);actions.append(addType);
+  const edit=textEl('button','건물 정보 수정','btn');edit.onclick=()=>{hide('detail-modal');openEditor(room)};actions.append(edit);
   const del=textEl('button','삭제','btn danger');del.onclick=async()=>{
    if(!confirm(`'${room.name}' 매물을 삭제할까요?`))return;
    del.disabled=true;const {error}=await db.from('rooms').delete().eq('id',room.id);
