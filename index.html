@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>교통대 자취방 지도</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans KR", sans-serif;
+      color: #222;
+      background: #f7f8fa;
+    }
+
+    header {
+      height: 68px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .logo {
+      font-size: 21px;
+      font-weight: 800;
+      color: #253b67;
+    }
+
+    .logo span { color: #5685ed; }
+
+    header small {
+      color: #888;
+      font-size: 12px;
+    }
+
+    .intro {
+      padding: 22px 28px;
+      background: white;
+    }
+
+    .intro h1 {
+      font-size: 23px;
+      margin: 0 0 7px;
+    }
+
+    .intro p {
+      margin: 0;
+      color: #777;
+      font-size: 14px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      height: calc(100vh - 160px);
+      min-height: 550px;
+    }
+
+    .sidebar {
+      background: white;
+      overflow-y: auto;
+      padding: 20px;
+      border-right: 1px solid #eee;
+    }
+
+    .sidebar h2 {
+      font-size: 17px;
+      margin: 0 0 6px;
+    }
+
+    .count {
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .room-card {
+      display: flex;
+      gap: 13px;
+      padding: 13px;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .room-card:hover,
+    .room-card.active {
+      border-color: #5685ed;
+      background: #f5f8ff;
+    }
+
+    .room-image {
+      width: 92px;
+      height: 92px;
+      flex-shrink: 0;
+      border-radius: 9px;
+      background: #e9edf4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8490a3;
+      font-size: 12px;
+    }
+
+    .room-info {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .room-info h3 {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .price {
+      color: #315fbd;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .detail-small {
+      font-size: 12px;
+      color: #888;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      min-height: 450px;
+    }
+
+    .price-marker {
+      background: #fff;
+      color: #315fbd;
+      border: 2px solid #5685ed;
+      border-radius: 20px;
+      padding: 7px 11px;
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: 0 2px 7px #0002;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .price-marker.selected {
+      background: #315fbd;
+      color: white;
+      border-color: #315fbd;
+    }
+
+    .detail-panel {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      width: 320px;
+      max-height: 75vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 5px 30px #0003;
+      z-index: 10;
+      padding: 20px;
+      display: none;
+    }
+
+    .detail-panel.show { display: block; }
+
+    .detail-panel h2 {
+      font-size: 19px;
+      margin: 0 0 12px;
+    }
+
+    .detail-photo {
+      width: 100%;
+      height: 160px;
+      border-radius: 10px;
+      background: #edf0f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8490a3;
+      margin-bottom: 14px;
+    }
+
+    .detail-price {
+      color: #315fbd;
+      font-size: 23px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .detail-description {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .listing-link {
+      display: block;
+      text-align: center;
+      padding: 12px;
+      background: #315fbd;
+      color: white;
+      text-decoration: none;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .listing-link.disabled {
+      background: #e9edf4;
+      color: #788397;
+      pointer-events: none;
+    }
+
+    .close-btn {
+      float: right;
+      border: 0;
+      background: none;
+      font-size: 23px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    footer {
+      text-align: center;
+      padding: 16px;
+      color: #999;
+      font-size: 11px;
+      background: white;
+    }
+
+    @media (max-width: 700px) {
+      header { padding: 0 16px; }
+      .intro { padding: 18px 16px; }
+      .intro h1 { font-size: 19px; }
+
+      .container {
+        display: flex;
+        flex-direction: column-reverse;
+        height: auto;
+        min-height: 0;
+      }
+
+      #map {
+        height: 48vh;
+        min-height: 330px;
+      }
+
+      .sidebar {
+        overflow: visible;
+        border-right: 0;
+        padding: 17px;
+      }
+
+      .detail-panel {
+        width: calc(100% - 24px);
+        right: 12px;
+        bottom: 12px;
+        max-height: 65vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">KNUT <span>ROOM MAP</span></div>
+  <small>한국교통대학교 충주캠퍼스</small>
+</header>
+
+<section class="intro">
+  <h1>교통대 주변 자취방 찾기 🏠</h1>
+  <p>지도에서 원하는 원룸을 선택하고 가격과 정보를 확인해 보세요.</p>
+</section>
+
+<div class="container">
+
+  <aside class="sidebar">
+    <h2>등록된 원룸</h2>
+    <div class="count" id="room-count"></div>
+    <div id="room-list"></div>
+  </aside>
+
+  <div id="map"></div>
+
+</div>
+
+<div class="detail-panel" id="detail-panel">
+  <button class="close-btn" onclick="closeDetail()">×</button>
+  <div id="detail-content"></div>
+</div>
+
+<footer>
+  교통대 자취방 지도 · 매물 정보는 실제 확인이 필요합니다.
+</footer>
+
+<script>
+  // 1. 카카오 JavaScript 키 입력
+  const KAKAO_KEY = "054e5d02a1c4a3b50a667207c5a433a9";
+
+  // 2. 원룸 정보
+  // 아래 3개는 화면 테스트용 가상 매물입니다.
+  // 좌표, 가격, 사진, 링크를 실제 정보로 바꿔주세요.
+
+  const rooms = [
+    {
+      id: 1,
+      name: "테스트 원룸 A",
+      deposit: 300,
+      rent: 35,
+      fee: 5,
+      lat: 36.9690,
+      lng: 127.8690,
+      photo: "",
+      link: "",
+      description: "테스트 매물입니다. 실제 위치와 가격이 아닙니다."
+    },
+    {
+      id: 2,
+      name: "테스트 원룸 B",
+      deposit: 500,
+      rent: 40,
+      fee: 0,
+      lat: 36.9658,
+      lng: 127.8720,
+      photo: "",
+      link: "",
+      description: "테스트 매물입니다. 실제 위치와 가격이 아닙니다."
+    },
+    {
+      id: 3,
+      name: "테스트 원룸 C",
+      deposit: 200,
+      rent: 30,
+      fee: 7,
+      lat: 36.9665,
+      lng: 127.8665,
+      photo: "",
+      link: "",
+      description: "테스트 매물입니다. 실제 위치와 가격이 아닙니다."
+    }
+  ];
+
+  let map;
+  let overlays = [];
+
+  const formatPrice = room =>
+    `${room.deposit} / ${room.rent}`;
+
+  function renderList() {
+    document.getElementById("room-count").textContent =
+      `총 ${rooms.length}개 매물`;
+
+    document.getElementById("room-list").innerHTML =
+      rooms.map(room => `
+        <div class="room-card" id="card-${room.id}"
+             onclick="selectRoom(${room.id})">
+          <div class="room-image">
+            ${room.photo
+              ? `<img src="${room.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:9px">`
+              : "사진 준비 중"}
+          </div>
+          <div class="room-info">
+            <h3>${room.name}</h3>
+            <div class="price">
+              ${formatPrice(room)}
+            </div>
+            <div class="detail-small">
+              보증금 / 월세 · 관리비 ${room.fee}만원
+            </div>
+          </div>
+        </div>
+      `).join("");
+  }
+
+  function showDetail(room) {
+    const photo = room.photo
+      ? `<img src="${room.photo}" style="width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:14px">`
+      : `<div class="detail-photo">사진 준비 중</div>`;
+
+    document.getElementById("detail-content").innerHTML = `
+      <h2>${room.name}</h2>
+      ${photo}
+      <div class="detail-price">
+        ${formatPrice(room)}
+      </div>
+      <div class="detail-description">
+        보증금 ${room.deposit}만원<br>
+        월세 ${room.rent}만원<br>
+        관리비 ${room.fee}만원<br><br>
+        ${room.description}
+      </div>
+      <a class="listing-link ${room.link ? "" : "disabled"}"
+         href="${room.link || "#"}"
+         target="_blank"
+         rel="noopener noreferrer">
+         ${room.link ? "원본 매물 보러 가기 ↗" : "매물 링크 등록 예정"}
+      </a>
+    `;
+
+    document.getElementById("detail-panel")
+      .classList.add("show");
+  }
+
+  function selectRoom(id) {
+    const room = rooms.find(item => item.id === id);
+    if (!room) return;
+
+    map.panTo(new kakao.maps.LatLng(room.lat, room.lng));
+    showDetail(room);
+
+    document.querySelectorAll(".room-card")
+      .forEach(card => card.classList.remove("active"));
+
+    document.getElementById(`card-${id}`)
+      ?.classList.add("active");
+
+    overlays.forEach(item => {
+      item.element.classList.toggle(
+        "selected", item.id === id
+      );
+    });
+  }
+
+  function closeDetail() {
+    document.getElementById("detail-panel")
+      .classList.remove("show");
+
+    document.querySelectorAll(".room-card")
+      .forEach(card => card.classList.remove("active"));
+
+    overlays.forEach(item =>
+      item.element.classList.remove("selected")
+    );
+  }
+
+  function initMap() {
+    const center = new kakao.maps.LatLng(
+      36.967631, 127.870140
+    );
+
+    map = new kakao.maps.Map(
+      document.getElementById("map"),
+      {
+        center: center,
+        level: 4
+      }
+    );
+
+    rooms.forEach(room => {
+      const element = document.createElement("div");
+      element.className = "price-marker";
+      element.textContent = `${room.rent}만원`;
+
+      element.addEventListener("click", () => {
+        selectRoom(room.id);
+      });
+
+      const overlay = new kakao.maps.CustomOverlay({
+        position: new kakao.maps.LatLng(
+          room.lat, room.lng
+        ),
+        content: element,
+        yAnchor: 1.2
+      });
+
+      overlay.setMap(map);
+
+      overlays.push({
+        id: room.id,
+        overlay: overlay,
+        element: element
+      });
+    });
+
+    renderList();
+  }
+
+  if (!KAKAO_KEY || KAKAO_KEY === "054e5d02a1c4a3b50a667207c5a433a9") {
+    document.getElementById("map").innerHTML =
+      "<p style='padding:30px;color:#555'>카카오 JavaScript 키를 입력한 후 저장해 주세요.</p>";
+    renderList();
+  } else {
+    const script = document.createElement("script");
+
+    script.src =
+      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=" +
+      encodeURIComponent(KAKAO_KEY) +
+      "&autoload=false";
+
+    script.onload = () => {
+      kakao.maps.load(initMap);
+    };
+
+    script.onerror = () => {
+      document.getElementById("map").innerHTML =
+        "<p style='padding:30px'>지도를 불러오지 못했습니다. JavaScript 키와 도메인 설정을 확인해 주세요.</p>";
+    };
+
+    document.head.appendChild(script);
+  }
+</script>
+
+</body>
+</html>
