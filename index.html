@@ -1,519 +1,151 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>교통대 자취방 지도</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, "Noto Sans KR", sans-serif;
-      color: #222;
-      background: #f7f8fa;
-    }
-
-    header {
-      height: 68px;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .logo {
-      font-size: 21px;
-      font-weight: 800;
-      color: #253b67;
-    }
-
-    .logo span { color: #5685ed; }
-
-    header small {
-      color: #888;
-      font-size: 12px;
-    }
-
-    .intro {
-      padding: 22px 28px;
-      background: white;
-    }
-
-    .intro h1 {
-      font-size: 23px;
-      margin: 0 0 7px;
-    }
-
-    .intro p {
-      margin: 0;
-      color: #777;
-      font-size: 14px;
-    }
-
-    .container {
-      display: grid;
-      grid-template-columns: 350px 1fr;
-      height: calc(100vh - 160px);
-      min-height: 550px;
-    }
-
-    .sidebar {
-      background: white;
-      overflow-y: auto;
-      padding: 20px;
-      border-right: 1px solid #eee;
-    }
-
-    .sidebar h2 {
-      font-size: 17px;
-      margin: 0 0 6px;
-    }
-
-    .count {
-      color: #888;
-      font-size: 13px;
-      margin-bottom: 18px;
-    }
-
-    .room-card {
-      display: flex;
-      gap: 13px;
-      padding: 13px;
-      border: 1px solid #eee;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .room-card:hover,
-    .room-card.active {
-      border-color: #5685ed;
-      background: #f5f8ff;
-    }
-
-    .room-image {
-      width: 92px;
-      height: 92px;
-      flex-shrink: 0;
-      border-radius: 9px;
-      background: #e9edf4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #8490a3;
-      font-size: 12px;
-    }
-
-    .room-info {
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .room-info h3 {
-      font-size: 14px;
-      margin: 0;
-    }
-
-    .price {
-      color: #315fbd;
-      font-weight: 800;
-      font-size: 16px;
-    }
-
-    .detail-small {
-      font-size: 12px;
-      color: #888;
-    }
-
-    #map {
-      width: 100%;
-      height: 100%;
-      min-height: 450px;
-    }
-
-    .price-marker {
-      background: #fff;
-      color: #315fbd;
-      border: 2px solid #5685ed;
-      border-radius: 20px;
-      padding: 7px 11px;
-      font-size: 13px;
-      font-weight: 800;
-      box-shadow: 0 2px 7px #0002;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .price-marker.selected {
-      background: #315fbd;
-      color: white;
-      border-color: #315fbd;
-    }
-
-    .detail-panel {
-      position: fixed;
-      right: 25px;
-      bottom: 25px;
-      width: 320px;
-      max-height: 75vh;
-      overflow-y: auto;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 5px 30px #0003;
-      z-index: 10;
-      padding: 20px;
-      display: none;
-    }
-
-    .detail-panel.show { display: block; }
-
-    .detail-panel h2 {
-      font-size: 19px;
-      margin: 0 0 12px;
-    }
-
-    .detail-photo {
-      width: 100%;
-      height: 160px;
-      border-radius: 10px;
-      background: #edf0f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #8490a3;
-      margin-bottom: 14px;
-    }
-
-    .detail-price {
-      color: #315fbd;
-      font-size: 23px;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
-    .detail-description {
-      font-size: 13px;
-      line-height: 1.8;
-      color: #666;
-      margin-bottom: 15px;
-    }
-
-    .listing-link {
-      display: block;
-      text-align: center;
-      padding: 12px;
-      background: #315fbd;
-      color: white;
-      text-decoration: none;
-      border-radius: 9px;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .listing-link.disabled {
-      background: #e9edf4;
-      color: #788397;
-      pointer-events: none;
-    }
-
-    .close-btn {
-      float: right;
-      border: 0;
-      background: none;
-      font-size: 23px;
-      cursor: pointer;
-      color: #888;
-    }
-
-    footer {
-      text-align: center;
-      padding: 16px;
-      color: #999;
-      font-size: 11px;
-      background: white;
-    }
-
-    @media (max-width: 700px) {
-      header { padding: 0 16px; }
-      .intro { padding: 18px 16px; }
-      .intro h1 { font-size: 19px; }
-
-      .container {
-        display: flex;
-        flex-direction: column-reverse;
-        height: auto;
-        min-height: 0;
-      }
-
-      #map {
-        height: 48vh;
-        min-height: 330px;
-      }
-
-      .sidebar {
-        overflow: visible;
-        border-right: 0;
-        padding: 17px;
-      }
-
-      .detail-panel {
-        width: calc(100% - 24px);
-        right: 12px;
-        bottom: 12px;
-        max-height: 65vh;
-      }
-    }
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>교통대 자취방 지도</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;color:#17243a;background:#fff}button,input,textarea{font:inherit}button{cursor:pointer}header{height:65px;border-bottom:1px solid #e8ebf1;display:flex;justify-content:space-between;align-items:center;padding:0 22px;gap:12px}.logo{font-size:22px;font-weight:900;color:#537af6}.logo span{color:#182943}.top{display:flex;align-items:center;gap:10px}.muted{color:#7b879a;font-size:13px}.btn{border:1px solid #d7deea;border-radius:9px;background:white;padding:9px 13px;color:#24334d}.btn.primary{background:#4777f4;color:white;border-color:#4777f4}.btn.danger{color:#c93044}.btn:disabled{opacity:.5;cursor:wait}.intro{padding:22px 20px 18px}.intro h1{font-size:22px;margin:0 0 6px}.intro p{margin:0;color:#78849a;font-size:14px}.layout{display:grid;grid-template-columns:340px minmax(0,1fr);height:calc(100vh - 162px);min-height:480px}.sidebar{border-right:1px solid #e9edf4;overflow:auto;padding:15px 10px}.sidehead{font-weight:800;margin:0 0 4px}.count{font-size:13px;color:#8490a0;margin-bottom:15px}.room{border:1px solid #e4e8ef;border-radius:13px;padding:12px;display:flex;gap:12px;margin-bottom:12px;cursor:pointer;background:white}.room:hover{border-color:#7394fa}.thumb{width:92px;height:92px;flex-shrink:0;border-radius:10px;background:#e8edf5;object-fit:cover;display:grid;place-items:center;font-size:12px;color:#8290a7}.room h3{font-size:15px;margin:6px 0}.price{font-weight:900;color:#3265d7;font-size:17px}.sub{font-size:12px;color:#8190a3;margin-top:6px}.maparea{position:relative;min-width:0;background:#f2f4f8}#map{width:100%;height:100%}.hint{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 2px 14px #0002;z-index:5;font-size:13px;white-space:nowrap;pointer-events:none}.marker{background:white;border:2px solid #4777f4;border-radius:25px;padding:6px 10px;color:#315bd1;font-size:13px;font-weight:900;white-space:nowrap;box-shadow:0 2px 5px #0002}.overlay{position:fixed;inset:0;background:#14213c77;z-index:30;display:none;align-items:center;justify-content:center;padding:16px}.overlay.open{display:flex}.dialog{background:white;border-radius:16px;padding:22px;width:min(100%,480px);max-height:94vh;overflow:auto;box-shadow:0 20px 60px #0003}.dialog h2{font-size:20px;margin:0 0 15px}.field{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}.control{width:100%;border:1px solid #d5dce8;border-radius:8px;padding:10px;background:white}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}.msg{font-size:13px;color:#c13b4c;margin:10px 0;min-height:18px;white-space:pre-wrap}.detail-img{width:100%;max-height:260px;object-fit:cover;border-radius:10px;margin-bottom:10px}.empty{color:#8490a0;font-size:14px;padding:20px 8px}.footer{font-size:12px;color:#8692a4;padding:12px 20px;border-top:1px solid #e8ebf1}@media(max-width:700px){header{padding:0 12px}.logo{font-size:18px}.intro{padding:15px}.intro h1{font-size:19px}.layout{display:flex;flex-direction:column-reverse;height:auto}.maparea{height:55vh;min-height:350px}.sidebar{max-height:none}.hint{white-space:normal;width:max-content;max-width:90%;text-align:center}}
+</style>
 </head>
-
 <body>
-
-<header>
-  <div class="logo">KNUT <span>ROOM MAP</span></div>
-  <small>한국교통대학교 충주캠퍼스</small>
-</header>
-
-<section class="intro">
-  <h1>교통대 주변 자취방 찾기 🏠</h1>
-  <p>지도에서 원하는 원룸을 선택하고 가격과 정보를 확인해 보세요.</p>
-</section>
-
-<div class="container">
-
-  <aside class="sidebar">
-    <h2>등록된 원룸</h2>
-    <div class="count" id="room-count"></div>
-    <div id="room-list"></div>
-  </aside>
-
-  <div id="map"></div>
-
-</div>
-
-<div class="detail-panel" id="detail-panel">
-  <button class="close-btn" onclick="closeDetail()">×</button>
-  <div id="detail-content"></div>
-</div>
-
-<footer>
-  교통대 자취방 지도 · 매물 정보는 실제 확인이 필요합니다.
-</footer>
-
+<header><div class="logo"><span>KNUT</span> ROOM MAP</div><div class="top"><span id="user-label" class="muted">한국교통대학교 충주캠퍼스</span><button class="btn" id="auth-btn">관리자 로그인</button></div></header>
+<div class="intro"><h1>교통대 주변 자취방 찾기 🏠</h1><p>지도에서 원룸을 선택하고 가격과 정보를 확인해 보세요.</p></div>
+<div class="layout"><aside class="sidebar"><div class="sidehead">등록된 원룸</div><div id="count" class="count">불러오는 중...</div><div id="room-list"></div></aside><main class="maparea"><div id="map"></div><div id="hint" class="hint" hidden>지도를 클릭하면 새 매물을 등록할 수 있어요.</div></main></div>
+<footer class="footer">교통대 자취방 지도 · 매물 정보는 실제 계약 전 반드시 확인하세요.</footer>
+<div class="overlay" id="login-modal"><div class="dialog"><h2>관리자 로그인</h2><label class="field">이메일</label><input class="control" id="login-email" type="email" autocomplete="username"><label class="field">비밀번호</label><input class="control" id="login-password" type="password" autocomplete="current-password"><div class="msg" id="login-msg"></div><div class="actions"><button class="btn" data-close="login-modal">취소</button><button class="btn primary" id="login-submit">로그인</button></div></div></div>
+<div class="overlay" id="edit-modal"><div class="dialog"><h2 id="edit-title">매물 등록</h2><form id="room-form"><label class="field">원룸 이름 *</label><input class="control" name="name" required maxlength="100"><div class="grid2"><div><label class="field">보증금 (만원) *</label><input class="control" name="deposit" type="number" min="0" required></div><div><label class="field">월세 (만원) *</label><input class="control" name="rent" type="number" min="0" required></div></div><label class="field">관리비 (만원)</label><input class="control" name="fee" type="number" min="0" value="0"><div class="grid2"><div><label class="field">위도 *</label><input class="control" name="lat" type="number" step="any" required></div><div><label class="field">경도 *</label><input class="control" name="lng" type="number" step="any" required></div></div><label class="field">방 사진 (선택, 5MB 이하)</label><input class="control" id="photo-file" type="file" accept="image/jpeg,image/png,image/webp"><label class="field">원본 매물 링크 (선택)</label><input class="control" name="listing_url" type="url" placeholder="https://..."><label class="field">상세 설명</label><textarea class="control" name="description" rows="3"></textarea><div class="msg" id="edit-msg"></div><div class="actions"><button class="btn" type="button" data-close="edit-modal">취소</button><button class="btn primary" id="save-btn" type="submit">저장</button></div></form></div></div>
+<div class="overlay" id="detail-modal"><div class="dialog"><h2 id="detail-name"></h2><div id="detail-content"></div><div class="actions" id="detail-actions"></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
-  // 1. 카카오 JavaScript 키 입력
-  const KAKAO_KEY = "054e5d02a1c4a3b50a667207c5a433a9";
+// 아래 세 값만 본인의 것으로 바꿔 주세요. Secret key는 절대 넣지 마세요.
+const KAKAO_KEY = '054e5d02a1c4a3b50a667207c5a433a9';
+const SUPABASE_URL = 'https://txvpsebpbfzfmngsdirh.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Q8b--CI0F6t37kFmU_44mg_-1Pe1wQX';
 
-  // 2. 원룸 정보
-  // 아래 3개는 화면 테스트용 가상 매물입니다.
-  // 좌표, 가격, 사진, 링크를 실제 정보로 바꿔주세요.
-
-  const rooms = [
-    {
-      id: 1,
-      name: "테스트 원룸 A",
-      deposit: 300,
-      rent: 35,
-      fee: 5,
-      lat: 36.9690,
-      lng: 127.8690,
-      photo: "",
-      link: "",
-      description: "테스트 매물입니다. 실제 위치와 가격이 아닙니다."
-    },
-    {
-      id: 2,
-      name: "테스트 원룸 B",
-      deposit: 500,
-      rent: 40,
-      fee: 0,
-      lat: 36.9658,
-      lng: 127.8720,
-      photo: "",
-      link: "",
-      description: "테스트 매물입니다. 실제 위치와 가격이 아닙니다."
-    },
-    {
-      id: 3,
-      name: "테스트 원룸 C",
-      deposit: 200,
-      rent: 30,
-      fee: 7,
-      lat: 36.9665,
-      lng: 127.8665,
-      photo: "",
-      link: "",
-      description: "테스트 매물입니다. 실제 위치와 가격이 아닙니다."
-    }
-  ];
-
-  let map;
-  let overlays = [];
-
-  const formatPrice = room =>
-    `${room.deposit} / ${room.rent}`;
-
-  function renderList() {
-    document.getElementById("room-count").textContent =
-      `총 ${rooms.length}개 매물`;
-
-    document.getElementById("room-list").innerHTML =
-      rooms.map(room => `
-        <div class="room-card" id="card-${room.id}"
-             onclick="selectRoom(${room.id})">
-          <div class="room-image">
-            ${room.photo
-              ? `<img src="${room.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:9px">`
-              : "사진 준비 중"}
-          </div>
-          <div class="room-info">
-            <h3>${room.name}</h3>
-            <div class="price">
-              ${formatPrice(room)}
-            </div>
-            <div class="detail-small">
-              보증금 / 월세 · 관리비 ${room.fee}만원
-            </div>
-          </div>
-        </div>
-      `).join("");
+const $=id=>document.getElementById(id);
+const configured = !KAKAO_KEY.startsWith('여기에_') && !SUPABASE_URL.includes('여기에_') && !SUPABASE_PUBLISHABLE_KEY.startsWith('여기에_');
+let db=null,map=null,rooms=[],overlays=[],admin=false,selected=null,editingId=null;
+function show(id){$(id).classList.add('open')}function hide(id){$(id).classList.remove('open')}
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>hide(b.dataset.close));
+function setMessage(id,msg){$(id).textContent=msg||''}
+function safeUrl(url){try{let u=new URL(url);return ['http:','https:'].includes(u.protocol)?u.href:null}catch{return null}}
+function money(n){return Number(n||0).toLocaleString('ko-KR')}
+function cleanNode(el){el.replaceChildren()}
+function textEl(tag,txt,cls){const e=document.createElement(tag);e.textContent=txt;if(cls)e.className=cls;return e}
+function price(room){return money(room.deposit)+' / '+money(room.rent)}
+function photoUrl(room){return room.photo_url && safeUrl(room.photo_url)}
+function render(){
+ $('count').textContent=`총 ${rooms.length}개 매물`;
+ const list=$('room-list');cleanNode(list);
+ if(!rooms.length)list.append(textEl('p','아직 등록된 매물이 없어요.','empty'));
+ rooms.forEach(room=>{
+  const card=document.createElement('div');card.className='room';card.onclick=()=>openDetail(room);
+  const photo=photoUrl(room);let thumb;
+  if(photo){thumb=document.createElement('img');thumb.src=photo;thumb.alt='매물 사진';thumb.className='thumb'}else{thumb=textEl('div','사진 준비 중','thumb')}
+  const info=document.createElement('div');info.append(textEl('h3',room.name),textEl('div',price(room),'price'),textEl('div',`보증금 / 월세 · 관리비 ${money(room.fee)}만원`,'sub'));
+  card.append(thumb,info);list.append(card);
+ });
+ overlays.forEach(o=>o.setMap(null));overlays=[];
+ if(!map||!window.kakao)return;
+ rooms.forEach(room=>{
+  const el=textEl('div',`${money(room.rent)}만원`,'marker');el.onclick=()=>openDetail(room);
+  const overlay=new kakao.maps.CustomOverlay({position:new kakao.maps.LatLng(room.lat,room.lng),content:el,yAnchor:1.3});overlay.setMap(map);overlays.push(overlay);
+ });
+}
+async function loadRooms(){
+ const {data,error}=await db.from('rooms').select('*').order('created_at',{ascending:false});
+ if(error){$('count').textContent='매물 로딩 실패';console.error(error);return}
+ rooms=data||[];render();
+}
+async function updateAuth(){
+ const {data:{user}}=await db.auth.getUser();admin=false;
+ if(user){const {data,error}=await db.from('admins').select('user_id').eq('user_id',user.id).maybeSingle();admin=!!data&&!error;}
+ $('auth-btn').textContent=user?'로그아웃':'관리자 로그인';$('user-label').textContent=admin?'관리자 모드':user?'일반 계정':'한국교통대학교 충주캠퍼스';$('hint').hidden=!admin;
+}
+$('auth-btn').onclick=async()=>{
+ const {data:{user}}=await db.auth.getUser();
+ if(user){await db.auth.signOut();await updateAuth();return}
+ setMessage('login-msg','');show('login-modal');
+};
+$('login-submit').onclick=async()=>{
+ const b=$('login-submit');b.disabled=true;setMessage('login-msg','로그인 중...');
+ try{
+  const {error}=await db.auth.signInWithPassword({email:$('login-email').value.trim(),password:$('login-password').value});
+  if(error)throw error;await updateAuth();$('login-password').value='';hide('login-modal');
+  if(!admin)alert('로그인했지만 관리자 권한이 없는 계정입니다.');
+ }catch(e){setMessage('login-msg',e.message)}finally{b.disabled=false}
+};
+function openEditor(room=null,lat=null,lng=null){
+ if(!admin)return;editingId=room?room.id:null;$('edit-title').textContent=room?'매물 수정':'새 매물 등록';
+ const f=$('room-form');f.reset();
+ for(const key of ['name','deposit','rent','fee','lat','lng','listing_url','description']){
+  f.elements[key].value=room?(room[key]??''):(key==='lat'?lat:key==='lng'?lng:key==='fee'?0:'');
+ }
+ setMessage('edit-msg','');show('edit-modal');
+}
+$('room-form').onsubmit=async e=>{
+ e.preventDefault();if(!admin)return;
+ const f=e.currentTarget,b=$('save-btn');b.disabled=true;setMessage('edit-msg','저장 중...');
+ try{
+  const get=k=>f.elements[k].value.trim();
+  const payload={name:get('name'),deposit:Number(get('deposit')),rent:Number(get('rent')),fee:Number(get('fee')||0),lat:Number(get('lat')),lng:Number(get('lng')),listing_url:get('listing_url')||null,description:get('description')||null};
+  if(!payload.name||!Number.isFinite(payload.lat)||!Number.isFinite(payload.lng)||Math.abs(payload.lat)>90||Math.abs(payload.lng)>180)throw Error('이름 또는 좌표를 확인해 주세요.');
+  if([payload.deposit,payload.rent,payload.fee].some(v=>!Number.isFinite(v)||v<0))throw Error('금액을 확인해 주세요.');
+  if(payload.listing_url&&!safeUrl(payload.listing_url))throw Error('링크는 https:// 또는 http://로 시작해야 합니다.');
+  const old=rooms.find(r=>r.id===editingId);if(old?.photo_url)payload.photo_url=old.photo_url;
+  const file=$('photo-file').files[0];
+  if(file){
+   if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('JPG, PNG, WEBP 사진만 올릴 수 있어요.');
+   if(file.size>5*1024*1024)throw Error('사진은 5MB 이하로 선택해 주세요.');
+   const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
+   const filename=`${crypto.randomUUID()}.${ext}`;
+   const {error:uploadError}=await db.storage.from('room-photos').upload(filename,file,{contentType:file.type,upsert:false});
+   if(uploadError)throw uploadError;
+   payload.photo_url=db.storage.from('room-photos').getPublicUrl(filename).data.publicUrl;
   }
-
-  function showDetail(room) {
-    const photo = room.photo
-      ? `<img src="${room.photo}" style="width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:14px">`
-      : `<div class="detail-photo">사진 준비 중</div>`;
-
-    document.getElementById("detail-content").innerHTML = `
-      <h2>${room.name}</h2>
-      ${photo}
-      <div class="detail-price">
-        ${formatPrice(room)}
-      </div>
-      <div class="detail-description">
-        보증금 ${room.deposit}만원<br>
-        월세 ${room.rent}만원<br>
-        관리비 ${room.fee}만원<br><br>
-        ${room.description}
-      </div>
-      <a class="listing-link ${room.link ? "" : "disabled"}"
-         href="${room.link || "#"}"
-         target="_blank"
-         rel="noopener noreferrer">
-         ${room.link ? "원본 매물 보러 가기 ↗" : "매물 링크 등록 예정"}
-      </a>
-    `;
-
-    document.getElementById("detail-panel")
-      .classList.add("show");
-  }
-
-  function selectRoom(id) {
-    const room = rooms.find(item => item.id === id);
-    if (!room) return;
-
-    map.panTo(new kakao.maps.LatLng(room.lat, room.lng));
-    showDetail(room);
-
-    document.querySelectorAll(".room-card")
-      .forEach(card => card.classList.remove("active"));
-
-    document.getElementById(`card-${id}`)
-      ?.classList.add("active");
-
-    overlays.forEach(item => {
-      item.element.classList.toggle(
-        "selected", item.id === id
-      );
-    });
-  }
-
-  function closeDetail() {
-    document.getElementById("detail-panel")
-      .classList.remove("show");
-
-    document.querySelectorAll(".room-card")
-      .forEach(card => card.classList.remove("active"));
-
-    overlays.forEach(item =>
-      item.element.classList.remove("selected")
-    );
-  }
-
-  function initMap() {
-    const center = new kakao.maps.LatLng(
-      36.967631, 127.870140
-    );
-
-    map = new kakao.maps.Map(
-      document.getElementById("map"),
-      {
-        center: center,
-        level: 4
-      }
-    );
-
-    rooms.forEach(room => {
-      const element = document.createElement("div");
-      element.className = "price-marker";
-      element.textContent = `${room.rent}만원`;
-
-      element.addEventListener("click", () => {
-        selectRoom(room.id);
-      });
-
-      const overlay = new kakao.maps.CustomOverlay({
-        position: new kakao.maps.LatLng(
-          room.lat, room.lng
-        ),
-        content: element,
-        yAnchor: 1.2
-      });
-
-      overlay.setMap(map);
-
-      overlays.push({
-        id: room.id,
-        overlay: overlay,
-        element: element
-      });
-    });
-
-    renderList();
-  }
-
-  if (!KAKAO_KEY) {
-    document.getElementById("map").innerHTML =
-      "<p style='padding:30px;color:#555'>카카오 JavaScript 키를 입력한 후 저장해 주세요.</p>";
-    renderList();
-  } else {
-    const script = document.createElement("script");
-
-    script.src =
-      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=" +
-      encodeURIComponent(KAKAO_KEY) +
-      "&autoload=false";
-
-    script.onload = () => {
-      kakao.maps.load(initMap);
-    };
-
-    script.onerror = () => {
-      document.getElementById("map").innerHTML =
-        "<p style='padding:30px'>지도를 불러오지 못했습니다. JavaScript 키와 도메인 설정을 확인해 주세요.</p>";
-    };
-
-    document.head.appendChild(script);
-  }
+  const query=editingId?db.from('rooms').update(payload).eq('id',editingId):db.from('rooms').insert(payload);
+  const {error}=await query;if(error)throw error;
+  hide('edit-modal');hide('detail-modal');await loadRooms();
+  alert('매물이 저장됐어요!');
+ }catch(err){setMessage('edit-msg',err.message||String(err))}finally{b.disabled=false}
+};
+function openDetail(room){
+ selected=room;$('detail-name').textContent=room.name;
+ const content=$('detail-content');cleanNode(content);
+ const photo=photoUrl(room);if(photo){const img=document.createElement('img');img.src=photo;img.alt='원룸 사진';img.className='detail-img';content.append(img)}
+ content.append(textEl('p',`보증금 ${money(room.deposit)}만원 / 월세 ${money(room.rent)}만원`),textEl('p',`관리비 ${money(room.fee)}만원`));
+ if(room.description)content.append(textEl('p',room.description));
+ const actions=$('detail-actions');cleanNode(actions);
+ const link=safeUrl(room.listing_url);if(link){const a=document.createElement('a');a.href=link;a.target='_blank';a.rel='noopener noreferrer';a.className='btn';a.textContent='원본 매물 보기';actions.append(a)}
+ if(admin){
+  const edit=textEl('button','수정','btn');edit.onclick=()=>{hide('detail-modal');openEditor(room)};actions.append(edit);
+  const del=textEl('button','삭제','btn danger');del.onclick=async()=>{
+   if(!confirm(`'${room.name}' 매물을 삭제할까요?`))return;
+   del.disabled=true;const {error}=await db.from('rooms').delete().eq('id',room.id);
+   if(error){alert(error.message);del.disabled=false;return}hide('detail-modal');await loadRooms();
+  };actions.append(del);
+ }
+ const close=textEl('button','닫기','btn');close.onclick=()=>hide('detail-modal');actions.append(close);show('detail-modal');
+ if(map)map.panTo(new kakao.maps.LatLng(room.lat,room.lng));
+}
+function initMap(){
+ kakao.maps.load(()=>{
+  map=new kakao.maps.Map($('map'),{center:new kakao.maps.LatLng(36.967631,127.870140),level:4});
+  kakao.maps.event.addListener(map,'click',e=>{if(admin)openEditor(null,e.latLng.getLat().toFixed(7),e.latLng.getLng().toFixed(7))});
+  render();
+ });
+}
+async function start(){
+ if(!configured){$('map').append(textEl('p','index.html 상단의 카카오 키, Supabase URL, Publishable key를 입력해 주세요.','empty'));return}
+ try{
+  if(!window.supabase)throw Error('Supabase 라이브러리를 불러오지 못했습니다.');
+  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+  await updateAuth();await loadRooms();
+  const s=document.createElement('script');s.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(KAKAO_KEY)}&autoload=false`;
+  s.onload=initMap;s.onerror=()=>alert('카카오 지도 SDK 로딩에 실패했습니다. 도메인 설정을 확인해 주세요.');document.head.append(s);
+ }catch(e){console.error(e);$('count').textContent='연결 오류';alert(e.message)}
+}
+start();
 </script>
-
 </body>
 </html>
